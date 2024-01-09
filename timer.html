@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Timer</title>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  #timer {
+    text-align: center;
+  }
+  #inputFields {
+    display: block;
+  }
+  #countdown {
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div id="timer">
+  <h2>Countdown Timer</h2>
+  <div id="inputFields">
+    <label for="days">Days: </label>
+    <input type="number" id="days" placeholder="0">
+    <label for="hours">Hours: </label>
+    <input type="number" id="hours" placeholder="0">
+    <label for="minutes">Minutes: </label>
+    <input type="number" id="minutes" placeholder="0">
+    <label for="seconds">Seconds: </label>
+    <input type="number" id="seconds" placeholder="0">
+    <button onclick="startTimer()">Start</button>
+  </div>
+  <div id="countdown"></div>
+</div>
+<script>
+  let countdownInterval;
+
+  function startTimer() {
+    const days = parseInt(document.getElementById("days").value) || 0;
+    const hours = parseInt(document.getElementById("hours").value) || 0;
+    const minutes = parseInt(document.getElementById("minutes").value) || 0;
+    const seconds = parseInt(document.getElementById("seconds").value) || 0;
+
+    const totalTimeInSeconds = days * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60 + seconds;
+
+    if (totalTimeInSeconds <= 0) {
+      alert("Please enter a valid time.");
+      return;
+    }
+
+    document.getElementById("inputFields").style.display = "none";
+    document.getElementById("countdown").style.display = "block";
+
+    const targetTime = Date.now() + totalTimeInSeconds * 1000;
+    clearInterval(countdownInterval);
+
+    countdownInterval = setInterval(function() {
+      const currentTime = Date.now();
+      const timeLeft = targetTime - currentTime;
+
+      if (timeLeft <= 0) {
+        clearInterval(countdownInterval);
+        document.getElementById("countdown").innerHTML = "Time's up!";
+        alert("Time is complete!");
+      } else {
+        const daysLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hoursLeft = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const secondsLeft = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        document.getElementById("countdown").innerHTML = `${daysLeft}d ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`;
+      }
+    }, 10);
+  }
+</script>
+</body>
+</html>
